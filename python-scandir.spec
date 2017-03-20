@@ -7,25 +7,31 @@
 
 %define 	module		scandir
 %define 	egg_name	scandir
-Summary:	A better directory iterator and faster os.walk() for Python
+Summary:	A better directory iterator and faster os.walk() for Python 2
+Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
-Version:	1.2
+Version:	1.5
 Release:	1
 License:	BSD
 Group:		Libraries/Python
+#Source0Download: https://github.com/benhoyt/scandir/releases
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	aaf700930492f9595eb15bbb0b0c9695
+# Source0-md5:	798407545833aa7011c1ee34b580e902
 URL:		https://github.com/benhoyt/scandir
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+%if %{with tests} && %(locale -a | grep -q '^C\.UTF-8$'; echo $?)
+BuildRequires:	glibc-localedb-all
+%endif
 %if %{with python2}
-BuildRequires:	python-modules
+BuildRequires:	python-modules >= 1:2.6
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules
+BuildRequires:	python3-modules >= 1:3.2
 BuildRequires:	python3-setuptools
 %endif
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
+Requires:	python-modules >= 1:2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -37,9 +43,20 @@ name. Using scandir() increases the speed of os.walk() by 2-20 times
 calls to os.stat() in most cases. scandir is included in the Python
 3.5+ standard library.
 
+%description -l pl.UTF-8
+scandir() to funkcja iterująca po katalogu podobna do os.listdir(),
+ale zamiast zwracania listy samych nazw plików, przekazująca przez
+yield obiekty DirEntry, zawierające poza nazwą typ pliku oraz
+informacje stat. Użycie scandir() przyspiesza os.walk() 2-20 razy (w
+zależności od platformy i systemu plików), zapobiegając w większości
+przypadków niepotrzebnym wywołaniom os.stat(). scandir jest zawarte w
+bibliotece standardowej Pythona 3.5+.
+
 %package -n python3-%{module}
-Summary:	A better directory iterator and faster os.walk() for Python
+Summary:	A better directory iterator and faster os.walk() for Python 3 < 3.5
+Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 3 < 3.5
 Group:		Libraries/Python
+Requires:	python3-modules >= 1:3.2
 
 %description -n python3-%{module}
 scandir() is a directory iteration function like os.listdir(), except
@@ -49,6 +66,15 @@ name. Using scandir() increases the speed of os.walk() by 2-20 times
 (depending on the platform and file system) by avoiding unnecessary
 calls to os.stat() in most cases. scandir is included in the Python
 3.5+ standard library.
+
+%description -n python3-%{module} -l pl.UTF-8
+scandir() to funkcja iterująca po katalogu podobna do os.listdir(),
+ale zamiast zwracania listy samych nazw plików, przekazująca przez
+yield obiekty DirEntry, zawierające poza nazwą typ pliku oraz
+informacje stat. Użycie scandir() przyspiesza os.walk() 2-20 razy (w
+zależności od platformy i systemu plików), zapobiegając w większości
+przypadków niepotrzebnym wywołaniom os.stat(). scandir jest zawarte w
+bibliotece standardowej Pythona 3.5+.
 
 %prep
 %setup -q -n %{module}-%{version}
@@ -60,7 +86,7 @@ calls to os.stat() in most cases. scandir is included in the Python
 %if %{with tests}
 rm -rf test/testdir
 # Tests fail if unicode is not supported
-LC_ALL=en_US.utf8 \
+LC_ALL=C.UTF-8 \
 %{__python} test/run_tests.py
 %endif
 
@@ -72,7 +98,7 @@ LC_ALL=en_US.utf8 \
 %if %{with tests}
 rm -rf test/testdir
 # Tests fail if unicode is not supported
-LC_ALL=en_US.utf8 \
+LC_ALL=C.UTF-8 \
 %{__python3} test/run_tests.py
 %endif
 
@@ -95,18 +121,18 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc README* LICENSE*
-%{py_sitedir}/%{module}.py[co]
-%attr(755,root,root) %{py_sitedir}/_%{module}.so
+%doc LICENSE.txt README.rst
+%{py_sitedir}/scandir.py[co]
+%attr(755,root,root) %{py_sitedir}/_scandir.so
 %{py_sitedir}/%{egg_name}-%{version}-py*.egg-info
 %endif
 
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc README* LICENSE*
-%{py3_sitedir}/%{module}.py
-%{py3_sitedir}/__pycache__/%{module}.*.pyc
-%attr(755,root,root) %{py3_sitedir}/_%{module}.*.so
+%doc LICENSE.txt README.rst
+%{py3_sitedir}/scandir.py
+%{py3_sitedir}/__pycache__/scandir.cpython-*.pyc
+%attr(755,root,root) %{py3_sitedir}/_scandir.cpython-*.so
 %{py3_sitedir}/%{egg_name}-%{version}-py*.egg-info
 %endif
