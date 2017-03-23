@@ -11,12 +11,13 @@ Summary:	A better directory iterator and faster os.walk() for Python 2
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
 Version:	1.5
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/benhoyt/scandir/releases
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
 # Source0-md5:	798407545833aa7011c1ee34b580e902
+Patch0:		%{name}-linux.patch
 URL:		https://github.com/benhoyt/scandir
 %if %{with tests} && %(locale -a | grep -q '^C\.UTF-8$'; echo $?)
 BuildRequires:	glibc-localedb-all
@@ -78,6 +79,7 @@ bibliotece standardowej Pythona 3.5+.
 
 %prep
 %setup -q -n %{module}-%{version}
+%patch0 -p1
 
 %build
 %if %{with python2}
@@ -87,9 +89,9 @@ bibliotece standardowej Pythona 3.5+.
 rm -rf test/testdir
 # Tests fail if unicode is not supported
 LC_ALL=C.UTF-8 \
+PYTHONPATH=$(pwd)/$(echo build-2/lib.linux-*) \
 %{__python} test/run_tests.py
 %endif
-
 %endif
 
 %if %{with python3}
@@ -99,9 +101,9 @@ LC_ALL=C.UTF-8 \
 rm -rf test/testdir
 # Tests fail if unicode is not supported
 LC_ALL=C.UTF-8 \
+PYTHONPATH=$(pwd)/$(echo build-3/lib.linux-*) \
 %{__python3} test/run_tests.py
 %endif
-
 %endif
 
 %install
