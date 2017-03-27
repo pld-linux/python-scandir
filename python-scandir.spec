@@ -1,9 +1,9 @@
-#
+
 # Conditional build:
 %bcond_without	doc	# don't build doc
 %bcond_without	tests	# do not perform "make test"
 %bcond_without	python2 # CPython 2.x module
-%bcond_with	python3 # CPython 3.x module, build for Python3<3.5
+%bcond_without	python3 # CPython 3.x module
 
 %define 	module		scandir
 %define 	egg_name	scandir
@@ -11,10 +11,9 @@ Summary:	A better directory iterator and faster os.walk() for Python 2
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
 Version:	1.5
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
-#Source0Download: https://github.com/benhoyt/scandir/releases
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
 # Source0-md5:	798407545833aa7011c1ee34b580e902
 Patch0:		%{name}-linux.patch
