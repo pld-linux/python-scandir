@@ -1,7 +1,6 @@
-
+#
 # Conditional build:
-%bcond_without	doc	# don't build doc
-%bcond_without	tests	# do not perform "make test"
+%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
@@ -10,15 +9,15 @@
 Summary:	A better directory iterator and faster os.walk() for Python 2
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
-Version:	1.5
-Release:	4
+Version:	1.9.0
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	798407545833aa7011c1ee34b580e902
+# Source0-md5:	093b8a619475f5902735832144c0dd98
 Patch0:		%{name}-linux.patch
 URL:		https://github.com/benhoyt/scandir
-%if %{with tests} && %(locale -a | grep -q '^C\.UTF-8$'; echo $?)
+%if %{with tests} && %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
 %endif
 %if %{with python2}
@@ -26,7 +25,7 @@ BuildRequires:	python-modules >= 1:2.6
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules >= 1:3.2
+BuildRequires:	python3-modules >= 1:3.4
 BuildRequires:	python3-setuptools
 %endif
 BuildRequires:	rpm-pythonprov
@@ -56,7 +55,7 @@ bibliotece standardowej Pythona 3.5+.
 Summary:	A better directory iterator and faster os.walk() for Python 3 < 3.5
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 3 < 3.5
 Group:		Libraries/Python
-Requires:	python3-modules >= 1:3.2
+Requires:	python3-modules >= 1:3.4
 
 %description -n python3-%{module}
 scandir() is a directory iteration function like os.listdir(), except
