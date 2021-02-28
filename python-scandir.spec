@@ -4,13 +4,17 @@
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
+%if "%{_ver_ge '%{py3_ver}' '3.9'}" == "1"
+%undefine	with_python3
+%endif
+
 %define 	module		scandir
 %define 	egg_name	scandir
 Summary:	A better directory iterator and faster os.walk() for Python 2
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
 Version:	1.10.0
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
@@ -29,7 +33,7 @@ BuildRequires:	python3-modules >= 1:3.4
 BuildRequires:	python3-setuptools
 %endif
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	rpmbuild(macros) >= 1.750
 Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
