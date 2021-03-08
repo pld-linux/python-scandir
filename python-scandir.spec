@@ -14,7 +14,7 @@ Summary:	A better directory iterator and faster os.walk() for Python 2
 Summary(pl.UTF-8):	Lepszy iterator po katalogach i szybsze os.walk() dla Pythona 2
 Name:		python-%{module}
 Version:	1.10.0
-Release:	5
+Release:	6
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://github.com/benhoyt/scandir/archive/v%{version}/%{module}-%{version}.tar.gz
